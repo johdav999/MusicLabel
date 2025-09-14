@@ -1,36 +1,10 @@
 #include "EventSubsystem.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
-#include "UI/Widget_DashboardLayout.h"
 
 void UEventSubsystem::TriggerEvent(const FGameEvent& Event)
 {
     UE_LOG(LogTemp, Log, TEXT("Event Triggered: %s - %s"), *Event.Headline, *Event.Description);
-
-    if (!Layout && GetWorld())
-    {
-        TArray<UUserWidget*> Widgets;
-        UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetWorld(), Widgets, UWidget_DashboardLayout::StaticClass(), false);
-        if (Widgets.Num() > 0)
-        {
-            Layout = Cast<UWidget_DashboardLayout>(Widgets[0]);
-        }
-    }
-
-    if (Layout)
-    {
-        static const FName FuncName(TEXT("AddNewsItemToTop"));
-        if (UFunction* Func = Layout->FindFunction(FuncName))
-        {
-            struct
-            {
-                FGameEvent EventParam;
-            } Params;
-            Params.EventParam = Event;
-            Layout->ProcessEvent(Func, &Params);
-        }
-    }
 }
 
 void UEventSubsystem::ResolveEvent()
@@ -51,8 +25,6 @@ void UEventSubsystem::ScheduleEvent(const FGameEvent& Event)
 void UEventSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
-
-    Layout = nullptr;
 
     // Setup two sample events
     FGameEvent GenreEvent;
