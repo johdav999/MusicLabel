@@ -6,6 +6,8 @@
 #include "TimerManager.h"
 #include "EventSubsystem.generated.h"
 
+class UWidget_DashboardLayout;
+
 /** Manages random or triggered game events. */
 UCLASS()
 class MUSICLABEL_API UEventSubsystem : public UGameInstanceSubsystem
@@ -38,5 +40,9 @@ private:
 
     /** Timer handle for periodic event generation. */
     FTimerHandle EventTimer;
+
+    /** Cached reference to the dashboard layout widget. */
+    UPROPERTY()
+    UWidget_DashboardLayout* Layout;
 };
 
