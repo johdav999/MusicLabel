@@ -1,5 +1,8 @@
 #include "LabelSimSubsystem.h"
 
+#include "ArtistContractSubsystem.h"
+#include "Engine/GameInstance.h"
+
 void ULabelSimSubsystem::TickDay()
 {
     // 1. Apply decade modifiers (tech, marketing reach, piracy risk).
@@ -59,6 +62,31 @@ void ULabelSimSubsystem::ConvertDemandToSales()
 
 void ULabelSimSubsystem::UpdateArtistStates()
 {
+    if (UGameInstance* GameInstance = GetGameInstance())
+    {
+        if (UArtistContractSubsystem* ContractSubsystem = GameInstance->GetSubsystem<UArtistContractSubsystem>())
+        {
+            SignedArtists.Reset();
+
+            const TArray<FArtistContract>& Contracts = ContractSubsystem->GetContracts();
+            for (const FArtistContract& Contract : Contracts)
+            {
+                if (!Contract.IsValid())
+                {
+                    continue;
+                }
+
+                if (Contract.Status == EContractStatus::Signed || Contract.Status == EContractStatus::Active)
+                {
+                    if (UArtistAsset* Artist = Contract.Artist.Get())
+                    {
+                        SignedArtists.AddUnique(Artist);
+                    }
+                }
+            }
+        }
+    }
+
     // TODO: Update fame, morale, and fatigue for signed artists.
 }
 

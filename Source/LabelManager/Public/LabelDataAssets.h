@@ -195,6 +195,7 @@ private:
 public:
     int32 GetAdvance() const { return Advance; }
     float GetRoyaltySplit() const { return RoyaltySplit; }
+    int32 GetRecordsNumber() const { return RecordsNumber; }
 };
 
 /** Song data asset */
