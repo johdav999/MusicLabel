@@ -20,3 +20,6 @@ Saved/*
 *.fbx
 *.uasset
 *.jpg
+
+*.ps1
+*.gitignore
