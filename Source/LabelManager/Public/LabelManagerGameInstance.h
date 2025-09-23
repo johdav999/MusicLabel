@@ -33,6 +33,6 @@ protected:
     TSubclassOf<ULayout> LayoutGUIClass;
 
     /** Persistent layout widget instance kept alive for the lifetime of the game instance. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    UPROPERTY()
     ULayout* LayoutGUI = nullptr;
 };
