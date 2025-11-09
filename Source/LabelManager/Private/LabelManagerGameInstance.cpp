@@ -13,6 +13,11 @@ void ULabelManagerGameInstance::Init()
 {
     Super::Init();
 
+    if (!IsValid(LayoutGUI))
+    {
+        LayoutGUI = nullptr;
+    }
+
     if (!LayoutGUI && LayoutGUIClass)
     {
         LayoutGUI = CreateWidget<ULayout>(this, LayoutGUIClass);
@@ -25,6 +30,11 @@ void ULabelManagerGameInstance::Init()
 
 ULayout* ULabelManagerGameInstance::EnsureLayoutForPlayer(APlayerController* OwningPlayer)
 {
+    if (!IsValid(LayoutGUI))
+    {
+        LayoutGUI = nullptr;
+    }
+
     if (!LayoutGUI && LayoutGUIClass)
     {
         LayoutGUI = CreateWidget<ULayout>(this, LayoutGUIClass);
