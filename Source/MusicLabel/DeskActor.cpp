@@ -41,6 +41,20 @@ ADeskActor::ADeskActor()
 
     // 3) Bind click on the box
     InteractionBox->OnClicked.AddDynamic(this, &ADeskActor::HandleDeskClicked);
+
+    TArray<UUserWidget*> FoundWidgets;
+    UWidgetBlueprintLibrary::GetAllWidgetsOfClass(
+        GetWorld(),
+        FoundWidgets,
+        ULayout::StaticClass(),
+        false   // includeOnlyVisibleWidgets = false
+    );
+
+    if (FoundWidgets.Num() > 0)
+    {
+        Layout = Cast<ULayout>(FoundWidgets[0]);
+       
+    }
 }
 
 void ADeskActor::SetCompanyFunction(EDeskCompanyFunction NewFunction, FText NewCustomLabel)
@@ -88,10 +102,9 @@ void ADeskActor::HandleDeskClicked(UPrimitiveComponent* TouchedComponent, FKey B
         {
             if (ULabelManagerGameInstance* GameInstance = World->GetGameInstance<ULabelManagerGameInstance>())
             {
-                if (ULayout* LayoutWidget = GameInstance->EnsureLayoutForPlayer(World->GetFirstPlayerController()))
-                {
-                    LayoutWidget->ShowSignedArtistsWidget();
-                }
+                
+                    Layout->ShowSignedArtistsWidget();
+                
             }
         }
     };

@@ -10,15 +10,15 @@ void UEventSubsystem::TriggerEvent(const FGameEvent &Event) {
   UE_LOG(LogTemp, Log, TEXT("Event Triggered: %s - %s"), *Event.Headline,
          *Event.Description);
 
-  if (!LayoutWidget) {
-    if (UWorld *World = GetWorld()) {
-      if (ULabelManagerGameInstance *GameInstance =
-              World->GetGameInstance<ULabelManagerGameInstance>()) {
-        LayoutWidget =
-            GameInstance->EnsureLayoutForPlayer(World->GetFirstPlayerController());
-      }
-    }
-  }
+  //if (!LayoutWidget) {
+  //  if (UWorld *World = GetWorld()) {
+  //    if (ULabelManagerGameInstance *GameInstance =
+  //            World->GetGameInstance<ULabelManagerGameInstance>()) {
+  //      LayoutWidget =
+  //          GameInstance->EnsureLayoutForPlayer(World->GetFirstPlayerController());
+  //    }
+  //  }
+  //}
 
   if (LayoutWidget) {
     FNewsItem NewsItem;

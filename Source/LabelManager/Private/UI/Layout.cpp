@@ -8,8 +8,16 @@
 #include "InputCoreTypes.h"
 
 
+// Layout.cpp
+void ULayout::NativeOnInitialized()
+{
+    Super::NativeOnInitialized();
+    UE_LOG(LogTemp, Warning, TEXT("ULayout::NativeOnInitialized this=%p Outer=%s"), this, *GetNameSafe(GetOuter()));
+}
+
 void ULayout::NativeConstruct()
 {
+    UE_LOG(LogTemp, Warning, TEXT("ULayout::NativeOnInitialized this=%p Outer=%s"), this, *GetNameSafe(GetOuter()));
     Super::NativeConstruct();
     FInputModeGameAndUI InputMode;
     InputMode.SetWidgetToFocus(TakeWidget());
@@ -36,6 +44,12 @@ void ULayout::RemoveLastNewsItem()
 
 void ULayout::ShowSignedArtistsWidget()
 {
+	if (SignedArtistsWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ULayout::ShowSignedArtistsWidget SignedArtistsWidget is null this=%p Outer=%s"), this, *GetNameSafe(GetOuter()));
+		return;
+	}
+	
     if (SignedArtistsWidget)
     {
         SignedArtistsWidget->SetVisibility(ESlateVisibility::Visible);

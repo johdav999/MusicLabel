@@ -29,7 +29,8 @@ protected:
 public:
 
 
-    void NativeConstruct();
+  
+
     UFUNCTION(BlueprintCallable)
     void AddNewsItemToTop(const FNewsItem& Item);
 
@@ -49,5 +50,8 @@ public:
     
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,meta = (BindWidget))
     UWidget_SignedArtists* SignedArtistsWidget;
+protected:
+    virtual void NativeOnInitialized() override;
+    virtual void NativeConstruct() override;
 };
 

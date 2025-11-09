@@ -16,20 +16,13 @@ void ALabelManagementPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (ULabelManagerGameInstance* GameInstance = GetGameInstance<ULabelManagerGameInstance>())
-    {
-        if (ULayout* Layout = GameInstance->EnsureLayoutForPlayer(this))
-        {
-            FInputModeGameAndUI InputMode;
-            InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-            InputMode.SetWidgetToFocus(Layout->TakeWidget());
 
-            SetInputMode(InputMode);
-            bShowMouseCursor = true;
-        }
-    }
+    FInputModeGameAndUI Mode;
+    Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    SetInputMode(Mode);
+    bShowMouseCursor = true;
+
 }
-
 void ALabelManagementPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();

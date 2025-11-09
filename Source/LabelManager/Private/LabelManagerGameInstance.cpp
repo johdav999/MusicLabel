@@ -1,49 +1,100 @@
 #include "LabelManagerGameInstance.h"
-
+#include "UObject/UObjectGlobals.h"   // for some helpers
+#include "UObject/Package.h"
+#include "UObject/Object.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/Layout.h"
 #include "GameFramework/PlayerController.h"
 
 ULabelManagerGameInstance::ULabelManagerGameInstance()
 {
-    LayoutGUIClass = ULayout::StaticClass();
+    UE_LOG(LogTemp, Warning, TEXT("ULayout::NativeOnInitialized this=%p Outer=%s"), this, *GetNameSafe(GetOuter()));
 }
 
 void ULabelManagerGameInstance::Init()
 {
-    Super::Init();
+    //UE_LOG(LogTemp, Warning, TEXT("GI::Init — LayoutGUI=%p (should be null here)"), LayoutGUI);
 
-    if (!LayoutGUI && LayoutGUIClass)
-    {
-        LayoutGUI = CreateWidget<ULayout>(this, LayoutGUIClass);
-        if (LayoutGUI)
-        {
-            LayoutGUI->AddToViewport(0);
-        }
-    }
+    //UE_LOG(LogTemp, Log, TEXT("Init before BPInit: LayoutGUI=%p"), LayoutGUI);
+    //Super::Init();
+    //UE_LOG(LogTemp, Log, TEXT("Init after BPInit: LayoutGUI=%p"), LayoutGUI);
+
+    //// Fires before level load (works for OpenLevel too)
+    //PreLoadHandle = FCoreUObjectDelegates::PreLoadMapWithContext.AddUObject(
+    //    this, &ULabelManagerGameInstance::HandlePreLoadMap);
+
+    //// Fires after new world is created and loaded
+    //PostLoadHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(
+    //    this, &ULabelManagerGameInstance::HandlePostLoadMap);
 }
 
-ULayout* ULabelManagerGameInstance::EnsureLayoutForPlayer(APlayerController* OwningPlayer)
+void ULabelManagerGameInstance::OnStart()
 {
-    if (!LayoutGUI && LayoutGUIClass)
-    {
-        LayoutGUI = CreateWidget<ULayout>(this, LayoutGUIClass);
-    }
+    Super::OnStart();
 
-    if (!LayoutGUI)
+    if (UWorld* World = GetWorld())
     {
-        return nullptr;
+        UE_LOG(LogTemp, Warning, TEXT("OnStart — Map is %s"),
+            *World->GetMapName());
     }
+}
+//
+//ULayout* ULabelManagerGameInstance::EnsureLayoutForPlayer(APlayerController* OwningPlayer)
+//{
+//    //// If an instance exists but isn't owned by a ULocalPlayer, discard it.
+//
+//
+//
+//    //if (LayoutGUI && !Cast<ULocalPlayer>(LayoutGUI->GetOuter()))
+//    //{
+//    //    UE_LOG(LogTemp, Warning, TEXT("LayoutGUI has wrong Outer (%s). Recreating with LocalPlayer."),
+//    //        *GetNameSafe(LayoutGUI->GetOuter()));
+//    //    LayoutGUI->RemoveFromParent();
+//    //    LayoutGUI = nullptr;
+//    //}
+//
+//    //// Create with LocalPlayer owner (the one thing that survives OpenLevel)
+//    //if (!LayoutGUI && LayoutGUIClass && OwningPlayer)
+//    //{
+//    //    LayoutGUI = CreateWidget<ULayout>(OwningPlayer, LayoutGUIClass);
+//    //    if (LayoutGUI)
+//    //    {
+//    //        LayoutGUI->AddToViewport(0);
+//    //    }
+//    //}
+//    //else if (LayoutGUI && !LayoutGUI->IsInViewport())
+//    //{
+//    //   LayoutGUI->AddToViewport(0);
+//    //}
+//
+//    //return LayoutGUI;
+//}
 
-    if (OwningPlayer && LayoutGUI->GetOwningPlayer() != OwningPlayer)
-    {
-        LayoutGUI->SetOwningPlayer(OwningPlayer);
-    }
+void ULabelManagerGameInstance::HandlePreLoadMap(const FWorldContext& worldContext, const FString& MapName)
+{
+    UE_LOG(LogTemp, Warning, TEXT("PreLoadMap: Loading map '%s' (context world type: %d)"),
+        *MapName, (int32)worldContext.WorldType);
+}
 
-    if (!LayoutGUI->IsInViewport())
-    {
-        LayoutGUI->AddToViewport(0);
-    }
+void ULabelManagerGameInstance::HandlePostLoadMap(UWorld* LoadedWorld)
+{
+    //UE_LOG(LogTemp, Warning, TEXT("PostLoadMap: Loaded world '%s'"),
+    //    LoadedWorld ? *LoadedWorld->GetMapName() : TEXT("nullptr"));
 
-    return LayoutGUI;
+    //// If you want to immediately re-attach your persistent UI after OpenLevel:
+    //if (LoadedWorld)
+    //{
+    //    if (APlayerController* PC = LoadedWorld->GetFirstPlayerController())
+    //    {
+    //        // Call your existing helper
+    //   ULayout* layout=    EnsureLayoutForPlayer(PC);
+	   //layout->SetVisibility(ESlateVisibility::Visible);
+	   //UE_LOG(LogTemp, Warning, TEXT("Re-attached layout to PC %s"),
+		  // *GetNameSafe(PC));
+    //   UE_LOG(LogTemp, Warning, TEXT("Layout  path=%s inViewport=%d"),
+    //       
+    //       *layout->GetPathName(),
+    //       layout->IsInViewport());
+    //    }
+    //}
 }

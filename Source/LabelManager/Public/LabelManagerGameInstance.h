@@ -20,19 +20,38 @@ public:
     virtual void Init() override;
 
     /** Returns the dashboard layout widget if it has been created. */
-    UFUNCTION(BlueprintPure, Category = "UI")
-    ULayout* GetLayoutWidget() const { return LayoutGUI; }
+    //UFUNCTION(BlueprintPure, Category = "UI")
+    //ULayout* GetLayoutWidget() const { return LayoutGUI; }
 
-    /** Ensures the layout widget exists, is owned by the supplied player and added to the viewport. */
-    UFUNCTION(BlueprintCallable, Category = "UI")
-    ULayout* EnsureLayoutForPlayer(APlayerController* OwningPlayer);
+    ///** Ensures the layout widget exists, is owned by the supplied player and added to the viewport. */
+    //UFUNCTION(BlueprintCallable, Category = "UI")
+    //ULayout* EnsureLayoutForPlayer(APlayerController* OwningPlayer);
 
+    //UFUNCTION(BlueprintCallable, Category = "UI")
+    //ULayout* BP_GetOrCreateLayout(APlayerController* OwningPlayer)
+    //{
+    //    return EnsureLayoutForPlayer(OwningPlayer);
+    //}
 protected:
     /** Class used to instantiate the persistent dashboard layout widget. */
-    UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<ULayout> LayoutGUIClass;
+    //UPROPERTY(EditDefaultsOnly, Category = "UI")
+    //TSubclassOf<ULayout> LayoutGUIClass;
 
     /** Persistent layout widget instance kept alive for the lifetime of the game instance. */
-    UPROPERTY()
-    ULayout* LayoutGUI = nullptr;
+    //UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+    //ULayout* LayoutGUI = nullptr;
+
+    void OnStart() override;
+
+
+private:
+    FDelegateHandle PreLoadHandle;
+    FDelegateHandle PostLoadHandle;
+
+    UFUNCTION()
+    void HandlePreLoadMap(const struct FWorldContext& WorldContext, const FString& MapName);
+
+    UFUNCTION()
+    void HandlePostLoadMap(UWorld* LoadedWorld);
+
 };

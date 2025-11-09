@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "LabelManager/Public/UI/Layout.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "DeskActor.generated.h"
 
 class UBoxComponent;
@@ -65,6 +67,8 @@ public:
     /** Returns the localized label for the current company function. */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Desk")
     FText GetCompanyFunctionLabel() const;
+
+    ULayout* Layout = nullptr;
 
 protected:
     UFUNCTION()
