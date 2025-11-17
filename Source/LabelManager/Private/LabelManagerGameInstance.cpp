@@ -15,22 +15,32 @@ void ULabelManagerGameInstance::Init()
 {
     //UE_LOG(LogTemp, Warning, TEXT("GI::Init — LayoutGUI=%p (should be null here)"), LayoutGUI);
 
-    //UE_LOG(LogTemp, Log, TEXT("Init before BPInit: LayoutGUI=%p"), LayoutGUI);
-    //Super::Init();
-    //UE_LOG(LogTemp, Log, TEXT("Init after BPInit: LayoutGUI=%p"), LayoutGUI);
+    if (!IsValid(LayoutGUI))
+    {
+        LayoutGUI = nullptr;
+    }
 
-    //// Fires before level load (works for OpenLevel too)
-    //PreLoadHandle = FCoreUObjectDelegates::PreLoadMapWithContext.AddUObject(
-    //    this, &ULabelManagerGameInstance::HandlePreLoadMap);
-
-    //// Fires after new world is created and loaded
-    //PostLoadHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(
-    //    this, &ULabelManagerGameInstance::HandlePostLoadMap);
+    if (!LayoutGUI && LayoutGUIClass)
+    {
+        LayoutGUI = CreateWidget<ULayout>(this, LayoutGUIClass);
+        if (LayoutGUI)
+        {
+            LayoutGUI->AddToViewport(0);
+        }
+    }
 }
 
 void ULabelManagerGameInstance::OnStart()
 {
-    Super::OnStart();
+    if (!IsValid(LayoutGUI))
+    {
+        LayoutGUI = nullptr;
+    }
+
+    if (!LayoutGUI && LayoutGUIClass)
+    {
+        LayoutGUI = CreateWidget<ULayout>(this, LayoutGUIClass);
+    }
 
     if (UWorld* World = GetWorld())
     {
